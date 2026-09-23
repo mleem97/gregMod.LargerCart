@@ -12,6 +12,7 @@ namespace greg.Mods.LargerCart.Patches;
 internal static class TrolleyLoadingBayPatch
 {
     internal static int TargetCount = 240;
+    internal static float TableHeight = 0.35f;
 
     [HarmonyPostfix]
     private static void Postfix(global::Il2Cpp.TrolleyLoadingBay __instance)
@@ -22,6 +23,13 @@ internal static class TrolleyLoadingBayPatch
                 return;
             TrolleyArray.EnsureCapacity(__instance, TargetCount);
             CartStabilizer.Apply(__instance);
+            try
+            {
+                LargerCartMod.NoteBay(__instance);
+                CartTable.TryEnsure(__instance, TableHeight);
+                CartTable.EnsureTraySlots(__instance);
+            }
+            catch { /* Tisch-Bau best-effort */ }
         }
         catch (Exception ex)
         {

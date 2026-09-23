@@ -15,8 +15,8 @@ namespace greg.Mods.LargerCart.Patches;
 internal static class CartStabilizer
 {
     internal static bool Enabled = true;
-    internal static float MassMultiplier = 5f;
-    internal static float AngularDragMultiplier = 10f;
+    internal static float MassMultiplier = 2f;
+    internal static float AngularDragMultiplier = 4f;
 
     private static readonly HashSet<IntPtr> Stabilized = new HashSet<IntPtr>();
 

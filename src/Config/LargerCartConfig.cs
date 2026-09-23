@@ -26,10 +26,22 @@ internal sealed class LargerCartConfig
     public bool StabilizeCart { get; set; } = true;
 
     /// <summary>Rigidbody-Masse-Multiplikator (1 = Vanilla).</summary>
-    public float CartMassMultiplier { get; set; } = 5f;
+    public float CartMassMultiplier { get; set; } = 2f;
 
     /// <summary>AngularDrag-Multiplikator gegen Taumeln (1 = Vanilla).</summary>
-    public float CartAngularDragMultiplier { get; set; } = 10f;
+    public float CartAngularDragMultiplier { get; set; } = 4f;
+
+    /// <summary>Klapp-Tisch auf dem Trolley bauen (per Taste ein/aus).</summary>
+    public bool TableEnabled { get; set; } = true;
+
+    /// <summary>Taste zum Aus-/Einklappen (z.B. "T").</summary>
+    public string TableToggleKey { get; set; } = "T";
+
+    /// <summary>Plattenhoehe ueber Trolley-Oberkante in Metern.</summary>
+    public float TableHeightAboveTop { get; set; } = 0.35f;
+
+    /// <summary>4x3 Tray-Raster (Modulboxen) auf Tischhoehe als Slots.</summary>
+    public bool TableTraySlots { get; set; } = true;
 
     internal static LargerCartConfig Load()
     {
