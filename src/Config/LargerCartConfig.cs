@@ -21,6 +21,16 @@ internal sealed class LargerCartConfig
 
     public int TargetPositionCount { get; set; } = DefaultPositionCount;
 
+    /// <summary>Master-Schalter: Trolley schwerer/traege machen, damit er
+    /// beladen nicht durch die Gegend fliegt.</summary>
+    public bool StabilizeCart { get; set; } = true;
+
+    /// <summary>Rigidbody-Masse-Multiplikator (1 = Vanilla).</summary>
+    public float CartMassMultiplier { get; set; } = 5f;
+
+    /// <summary>AngularDrag-Multiplikator gegen Taumeln (1 = Vanilla).</summary>
+    public float CartAngularDragMultiplier { get; set; } = 10f;
+
     internal static LargerCartConfig Load()
     {
         string dir = Path.Combine(MelonLoader.Utils.MelonEnvironment.ModsDirectory, NewFolderName);
@@ -82,6 +92,7 @@ internal sealed class LargerCartConfig
 
     private LargerCartConfig WithValidatedCounts(string path)
     {
+        bool dirty = false;
         int clamped = Math.Clamp(TargetPositionCount, MinPositionCount, MaxPositionCount);
         if (clamped != TargetPositionCount)
         {
@@ -89,8 +100,23 @@ internal sealed class LargerCartConfig
                 $"[LargerCart] TargetPositionCount {TargetPositionCount} ausserhalb " +
                 $"[{MinPositionCount},{MaxPositionCount}], nutze {clamped}.");
             TargetPositionCount = clamped;
-            Save(path, this);
+            dirty = true;
         }
+        float mass = Math.Clamp(CartMassMultiplier, 1f, 50f);
+        if (mass != CartMassMultiplier)
+        {
+            MelonLogger.Warning($"[LargerCart] CartMassMultiplier ausserhalb [1,50], nutze {mass}.");
+            CartMassMultiplier = mass;
+            dirty = true;
+        }
+        float ang = Math.Clamp(CartAngularDragMultiplier, 1f, 100f);
+        if (ang != CartAngularDragMultiplier)
+        {
+            MelonLogger.Warning($"[LargerCart] CartAngularDragMultiplier ausserhalb [1,100], nutze {ang}.");
+            CartAngularDragMultiplier = ang;
+            dirty = true;
+        }
+        if (dirty) Save(path, this);
         return this;
     }
 
