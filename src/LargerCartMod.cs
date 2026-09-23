@@ -18,7 +18,12 @@ public class LargerCartMod : MelonMod
     {
         var config = LargerCartConfig.Load();
         TrolleyLoadingBayPatch.TargetCount = config.TargetPositionCount;
-        MelonLogger.Msg($"[LargerCart] v2.0.0 geladen. TargetPositionCount = {config.TargetPositionCount}");
+        CartStabilizer.Enabled = config.StabilizeCart;
+        CartStabilizer.MassMultiplier = config.CartMassMultiplier;
+        CartStabilizer.AngularDragMultiplier = config.CartAngularDragMultiplier;
+        MelonLogger.Msg($"[LargerCart] v2.0.0 geladen. TargetPositionCount = {config.TargetPositionCount}, " +
+                        $"StabilizeCart = {config.StabilizeCart} " +
+                        $"(Masse x{config.CartMassMultiplier:0.#}, AngularDrag x{config.CartAngularDragMultiplier:0.#}).");
 
         try
         {

@@ -21,6 +21,7 @@ internal static class TrolleyLoadingBayPatch
             if (__instance == null)
                 return;
             TrolleyArray.EnsureCapacity(__instance, TargetCount);
+            CartStabilizer.Apply(__instance);
         }
         catch (Exception ex)
         {
