@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 using greg.Mods.LargerCart.Config;
 using greg.Mods.LargerCart.Patches;
 
-[assembly: MelonInfo(typeof(greg.Mods.LargerCart.LargerCartMod), "gregMod.LargerCart", "2.0.0", "teamGregModding / mleem97 & BigTexasJerky")]
+[assembly: MelonInfo(typeof(greg.Mods.LargerCart.LargerCartMod), "gregMod.LargerCart", "2.1.0", "teamGregModding / mleem97 & BigTexasJerky")]
 [assembly: MelonGame("Waseku", "Data Center")]
 
 namespace greg.Mods.LargerCart;
@@ -31,7 +31,7 @@ public class LargerCartMod : MelonMod
         CartTable.TraySlots = config.TableTraySlots;
         _tableHeight = Math.Max(0.1f, config.TableHeightAboveTop);
         _tableKey = ParseKey(config.TableToggleKey, Key.T);
-        MelonLogger.Msg($"[LargerCart] v2.0.0 geladen. TargetPositionCount = {config.TargetPositionCount}, " +
+        MelonLogger.Msg($"[LargerCart] v2.1.0 geladen. TargetPositionCount = {config.TargetPositionCount}, " +
                         $"StabilizeCart = {config.StabilizeCart} " +
                         $"(Masse x{config.CartMassMultiplier:0.#}, AngularDrag x{config.CartAngularDragMultiplier:0.#}), " +
                         $"Tisch = {config.TableEnabled} (Taste {_tableKey}).");
