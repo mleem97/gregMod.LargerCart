@@ -42,7 +42,7 @@ public class LargerCartMod : MelonMod
         }
         catch (Exception ex)
         {
-            MelonLogger.Warning($"[LargerCart] Legacy-Unpatch fehlgeschlagen: {ex.Message}");
+            MelonLogger.Warning($"[LargerCart] Legacy unpatch failed: {ex.Message}");
         }
 
         try
@@ -53,7 +53,7 @@ public class LargerCartMod : MelonMod
         }
         catch (Exception ex)
         {
-            MelonLogger.Error($"[LargerCart] Patch fehlgeschlagen: {ex.GetBaseException().Message}");
+            MelonLogger.Error($"[LargerCart] Patch failed: {ex.GetBaseException().Message}");
         }
     }
 

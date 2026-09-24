@@ -61,7 +61,7 @@ internal static class CartStabilizer
                 }
                 catch (Exception ex)
                 {
-                    MelonLogger.Warning($"[LargerCart] Trolley-Suche fehlgeschlagen: {ex.Message}");
+                    MelonLogger.Warning($"[LargerCart] Trolley search failed: {ex.Message}");
                     return;
                 }
             }
@@ -82,11 +82,11 @@ internal static class CartStabilizer
 
             try { body.mass = Math.Max(0.1f, massBefore * MassMultiplier); } catch (Exception ex)
             {
-                MelonLogger.Warning($"[LargerCart] Masse setzen fehlgeschlagen: {ex.Message}");
+                MelonLogger.Warning($"[LargerCart] Setting mass failed: {ex.Message}");
             }
             try { body.angularDrag = Math.Max(0f, angBefore * AngularDragMultiplier); } catch (Exception ex)
             {
-                MelonLogger.Warning($"[LargerCart] AngularDrag setzen fehlgeschlagen: {ex.Message}");
+                MelonLogger.Warning($"[LargerCart] Setting angular drag failed: {ex.Message}");
             }
 
             float massAfter = massBefore, angAfter = angBefore;
@@ -98,7 +98,7 @@ internal static class CartStabilizer
         }
         catch (Exception ex)
         {
-            MelonLogger.Warning($"[LargerCart] Stabilisierung fehlgeschlagen: {ex.GetBaseException().Message}");
+            MelonLogger.Warning($"[LargerCart] Stabilization failed: {ex.GetBaseException().Message}");
         }
     }
 }

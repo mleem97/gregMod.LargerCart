@@ -97,7 +97,7 @@ internal sealed class LargerCartConfig
         }
         catch (Exception ex)
         {
-            MelonLogger.Warning($"[LargerCart] Migration fehlgeschlagen: {ex.Message}");
+            MelonLogger.Warning($"[LargerCart] Migration failed: {ex.Message}");
             return null;
         }
     }

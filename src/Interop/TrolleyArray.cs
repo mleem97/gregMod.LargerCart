@@ -37,7 +37,7 @@ internal static class TrolleyArray
         }
         catch (Exception ex)
         {
-            MelonLogger.Warning($"[LargerCart] Erweiterung fehlgeschlagen: {ex.GetBaseException().Message}");
+            MelonLogger.Warning($"[LargerCart] Expansion failed: {ex.GetBaseException().Message}");
         }
     }
 
