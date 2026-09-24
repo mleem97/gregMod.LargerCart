@@ -21,10 +21,6 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
-<<<<<<< Updated upstream
 - Trolley stabilization (mass/inertia, tuned more gently: mass x2,
   angular drag x4); config wiring (config → statics + patch hook).
-
-## [2.0.0]
-
 - Current state (slot capacity via `TrolleyArray`, JSON config).

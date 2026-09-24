@@ -6,8 +6,8 @@ using MelonLoader;
 namespace greg.Mods.LargerCart.Config;
 
 /// <summary>
-/// JSON-basierte Konfiguration. Bleibt bewusst standalone (kein gregCore,
-/// keine MelonPreferences), damit der Mod ohne Framework laeuft.
+/// JSON-based config. Stays deliberately standalone (no gregCore,
+/// no MelonPreferences), so the mod runs without framework.
 /// </summary>
 internal sealed class LargerCartConfig
 {
@@ -21,26 +21,26 @@ internal sealed class LargerCartConfig
 
     public int TargetPositionCount { get; set; } = DefaultPositionCount;
 
-    /// <summary>Master-Schalter: Trolley schwerer/traege machen, damit er
-    /// beladen nicht durch die Gegend fliegt.</summary>
+    /// <summary>Master switch: heavier/sluggish trolley so loaded
+    /// cart stays put.</summary>
     public bool StabilizeCart { get; set; } = true;
 
-    /// <summary>Rigidbody-Masse-Multiplikator (1 = Vanilla).</summary>
+    /// <summary>Rigidbody mass multiplier (1 = vanilla).</summary>
     public float CartMassMultiplier { get; set; } = 2f;
 
-    /// <summary>AngularDrag-Multiplikator gegen Taumeln (1 = Vanilla).</summary>
+    /// <summary>AngularDrag multiplier against tipping (1 = vanilla).</summary>
     public float CartAngularDragMultiplier { get; set; } = 4f;
 
-    /// <summary>Klapp-Tisch auf dem Trolley bauen (per Taste ein/aus).</summary>
+    /// <summary>Build folding table on trolley (toggle via key).</summary>
     public bool TableEnabled { get; set; } = true;
 
-    /// <summary>Taste zum Aus-/Einklappen (z.B. "T").</summary>
+    /// <summary>Key to open/close (e.g. "T").</summary>
     public string TableToggleKey { get; set; } = "T";
 
-    /// <summary>Plattenhoehe ueber Trolley-Oberkante in Metern.</summary>
+    /// <summary>Plate height above trolley top edge, meters.</summary>
     public float TableHeightAboveTop { get; set; } = 0.35f;
 
-    /// <summary>4x3 Tray-Raster (Modulboxen) auf Tischhoehe als Slots.</summary>
+    /// <summary>4x3 tray grid (module boxes) at table height as slots.</summary>
     public bool TableTraySlots { get; set; } = true;
 
     internal static LargerCartConfig Load()
@@ -60,19 +60,19 @@ internal sealed class LargerCartConfig
 
                 var fresh = new LargerCartConfig();
                 Save(path, fresh);
-                MelonLogger.Msg($"[LargerCart] Default-Config erstellt: {path}");
+                MelonLogger.Msg($"[LargerCart] Default config created: {path}");
                 return fresh;
             }
 
             var config = JsonSerializer.Deserialize<LargerCartConfig>(File.ReadAllText(path));
             if (config == null)
-                throw new InvalidDataException("Config ist leer.");
+                throw new InvalidDataException("Config is empty.");
 
             return config.WithValidatedCounts(path);
         }
         catch (Exception ex)
         {
-            MelonLogger.Warning($"[LargerCart] Config-Fehler, nutze Defaults: {ex.Message}");
+            MelonLogger.Warning($"[LargerCart] Config error, using defaults: {ex.Message}");
             return new LargerCartConfig();
         }
     }
@@ -92,7 +92,7 @@ internal sealed class LargerCartConfig
 
             var migrated = legacy.WithValidatedCounts(newPath);
             Save(newPath, migrated);
-            MelonLogger.Msg($"[LargerCart] Config aus {legacyPath} migriert.");
+            MelonLogger.Msg($"[LargerCart] Config migrated from {legacyPath}.");
             return migrated;
         }
         catch (Exception ex)
@@ -109,22 +109,22 @@ internal sealed class LargerCartConfig
         if (clamped != TargetPositionCount)
         {
             MelonLogger.Warning(
-                $"[LargerCart] TargetPositionCount {TargetPositionCount} ausserhalb " +
-                $"[{MinPositionCount},{MaxPositionCount}], nutze {clamped}.");
+                $"[LargerCart] TargetPositionCount {TargetPositionCount} out of range " +
+                $"[{MinPositionCount},{MaxPositionCount}], using {clamped}.");
             TargetPositionCount = clamped;
             dirty = true;
         }
         float mass = Math.Clamp(CartMassMultiplier, 1f, 50f);
         if (mass != CartMassMultiplier)
         {
-            MelonLogger.Warning($"[LargerCart] CartMassMultiplier ausserhalb [1,50], nutze {mass}.");
+            MelonLogger.Warning($"[LargerCart] CartMassMultiplier out of range [1,50], using {mass}.");
             CartMassMultiplier = mass;
             dirty = true;
         }
         float ang = Math.Clamp(CartAngularDragMultiplier, 1f, 100f);
         if (ang != CartAngularDragMultiplier)
         {
-            MelonLogger.Warning($"[LargerCart] CartAngularDragMultiplier ausserhalb [1,100], nutze {ang}.");
+            MelonLogger.Warning($"[LargerCart] CartAngularDragMultiplier out of range [1,100], using {ang}.");
             CartAngularDragMultiplier = ang;
             dirty = true;
         }

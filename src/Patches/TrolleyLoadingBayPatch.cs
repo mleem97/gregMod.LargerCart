@@ -6,7 +6,7 @@ using greg.Mods.LargerCart.Interop;
 namespace greg.Mods.LargerCart.Patches;
 
 /// <summary>
-/// Erweitert die Trolley-Arrays direkt nach dem Spiel-Start.
+/// Extends trolley arrays right after game start.
 /// </summary>
 [HarmonyPatch(typeof(global::Il2Cpp.TrolleyLoadingBay), nameof(global::Il2Cpp.TrolleyLoadingBay.Start))]
 internal static class TrolleyLoadingBayPatch
@@ -29,11 +29,11 @@ internal static class TrolleyLoadingBayPatch
                 CartTable.TryEnsure(__instance, TableHeight);
                 CartTable.EnsureTraySlots(__instance);
             }
-            catch { /* Tisch-Bau best-effort */ }
+            catch { /* table build best-effort */ }
         }
         catch (Exception ex)
         {
-            MelonLogger.Warning($"[LargerCart] Postfix-Fehler: {ex.GetBaseException().Message}");
+            MelonLogger.Warning($"[LargerCart] Postfix error: {ex.GetBaseException().Message}");
         }
     }
 }
