@@ -73,7 +73,7 @@ internal static class CartTable
             bay.positionsOnTrolley = grownPos;
             bay.usedPositions = grownUsed;
             _slotsAdded = true;
-            MelonLogger.Msg($"[LargerCart] {count} Tray-Slots auf Tischhoehe ({_plateTopY:0.00}m) eingehängt.");
+            MelonLogger.Msg($"[LargerCart] {count} tray slots at table height ({_plateTopY:0.00}m) added.");
         }
         catch (Exception ex)
         {
