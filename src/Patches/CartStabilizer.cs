@@ -6,11 +6,11 @@ using UnityEngine;
 namespace greg.Mods.LargerCart.Patches;
 
 /// <summary>
-/// Macht den Trolley schwerer und taumel-resistenter, damit er beladen nicht
-/// durch die Gegend fliegt. Ansatzpunkt ist der Rigidbody des Trolleys
-/// (ueber TrolleyLoadingBay.carController, Fallback: Namenssuche).
-/// Multiplikatoren statt Absolutwerten: Vanilla-Basis bleibt Referenz.
-/// Pro Szene einmalig pro Rigidbody (Pointer-Set gegen Doppel-Anwendung).
+/// Makes trolley heavier and tip-resistant so loaded
+/// cart stays put. Hooks the trolley Rigidbody
+/// (via TrolleyLoadingBay.carController, fallback: name search).
+/// Multipliers instead of absolutes: vanilla base stays reference.
+/// Once per scene per Rigidbody (pointer set against double apply).
 /// </summary>
 internal static class CartStabilizer
 {
@@ -39,7 +39,7 @@ internal static class CartStabilizer
                     if (body != null) how = $"carController '{go.name}'";
                 }
             }
-            catch { /* fallback unten */ }
+            catch { /* fallback below */ }
 
             if (body == null)
             {
@@ -54,21 +54,21 @@ internal static class CartStabilizer
                             n.IndexOf("cart", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
                             body = rb;
-                            how = $"Namenssuche '{n}'";
+                            how = $"name search '{n}'";
                             break;
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    MelonLogger.Warning($"[LargerCart] Trolley-Suche fehlgeschlagen: {ex.Message}");
+                    MelonLogger.Warning($"[LargerCart] Trolley search failed: {ex.Message}");
                     return;
                 }
             }
 
             if (body == null)
             {
-                MelonLogger.Warning("[LargerCart] Kein Trolley-Rigidbody gefunden (Stabilisierung uebersprungen).");
+                MelonLogger.Warning("[LargerCart] No trolley Rigidbody found (stabilization skipped).");
                 return;
             }
 
@@ -82,23 +82,23 @@ internal static class CartStabilizer
 
             try { body.mass = Math.Max(0.1f, massBefore * MassMultiplier); } catch (Exception ex)
             {
-                MelonLogger.Warning($"[LargerCart] Masse setzen fehlgeschlagen: {ex.Message}");
+                MelonLogger.Warning($"[LargerCart] Setting mass failed: {ex.Message}");
             }
             try { body.angularDrag = Math.Max(0f, angBefore * AngularDragMultiplier); } catch (Exception ex)
             {
-                MelonLogger.Warning($"[LargerCart] AngularDrag setzen fehlgeschlagen: {ex.Message}");
+                MelonLogger.Warning($"[LargerCart] Setting angularDrag failed: {ex.Message}");
             }
 
             float massAfter = massBefore, angAfter = angBefore;
             try { massAfter = body.mass; } catch { }
             try { angAfter = body.angularDrag; } catch { }
-            MelonLogger.Msg($"[LargerCart] Cart stabilisiert ({how}): " +
-                            $"Masse {massBefore:0.##} -> {massAfter:0.##}, " +
-                            $"AngularDrag {angBefore:0.###} -> {angAfter:0.###}.");
+            MelonLogger.Msg($"[LargerCart] Cart stabilized ({how}): " +
+                            $"mass {massBefore:0.##} -> {massAfter:0.##}, " +
+                            $"angularDrag {angBefore:0.###} -> {angAfter:0.###}.");
         }
         catch (Exception ex)
         {
-            MelonLogger.Warning($"[LargerCart] Stabilisierung fehlgeschlagen: {ex.GetBaseException().Message}");
+            MelonLogger.Warning($"[LargerCart] Stabilization failed: {ex.GetBaseException().Message}");
         }
     }
 }

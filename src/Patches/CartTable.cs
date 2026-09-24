@@ -5,10 +5,10 @@ using UnityEngine;
 namespace greg.Mods.LargerCart.Patches;
 
 /// <summary>
-/// Klapp-Tisch auf dem Trolley: eine Ablageplatte mit Beinen, per Taste
-/// ein-/ausklappbar (nur Optik, kein Collider — blockiert keine Klicks).
-/// Geometrie wird aus den Trolley-Bounds abgeleitet (passt sich an),
-/// Material vom Trolley uebernommen (garantiert gueltiger Shader).
+/// Folding table on trolley: shelf plate with legs, toggled
+/// via key (visual only, no collider — blocks no clicks).
+/// Geometry derived from trolley bounds (auto-fit),
+/// material taken from trolley (valid shader).
 /// </summary>
 internal static class CartTable
 {
@@ -26,11 +26,11 @@ internal static class CartTable
     private static float _plateCx, _plateCz, _plateW, _plateD;
     private static bool _slotsAdded;
 
-    /// <summary>Liveness-Check: Szenenwechsel zerstoert den Trolley mitsamt
-    /// Kind-Tisch (kein DontDestroyOnLoad) — dann neu bauen.</summary>
+    /// <summary>Liveness check: scene change destroys trolley incl.
+    /// child table (no DontDestroyOnLoad) — then rebuild.</summary>
     /// <summary>
-    /// Haengt ein Tray-Raster (Modulboxen) auf Plattenhoehe in
-    /// positionsOnTrolley/usedPositions ein. Idempotent pro Tisch.
+    /// Hooks a tray grid (module boxes) at plate height into
+    /// positionsOnTrolley/usedPositions. Idempotent per table.
     /// </summary>
     internal static void EnsureTraySlots(global::Il2Cpp.TrolleyLoadingBay bay)
     {
@@ -43,10 +43,10 @@ internal static class CartTable
 
             int count = TrayCols * TrayRows;
             var slots = new System.Collections.Generic.List<UnityEngine.Transform>();
-            // Slots NICHT unter den Tisch (der ist per Taste ausblendbar),
-            // sondern unter den Trolley: abgestellte Trays bleiben sichtbar,
-            // auch wenn die Platte eingeklappt ist. Positionen sind statisch,
-            // da der Tisch starr am Trolley haengt.
+            // Slots NOT under table (toggleable via key),
+            // under trolley: parked trays stay visible
+            // even when plate folded. Positions static,
+            // table rigid on trolley.
             UnityEngine.Transform slotParent = null;
             try { slotParent = _table.transform.parent ?? _table.transform; } catch { slotParent = _table.transform; }
             Quaternion rot;
@@ -73,11 +73,11 @@ internal static class CartTable
             bay.positionsOnTrolley = grownPos;
             bay.usedPositions = grownUsed;
             _slotsAdded = true;
-            MelonLogger.Msg($"[LargerCart] {count} Tray-Slots auf Tischhoehe ({_plateTopY:0.00}m) eingehängt.");
+            MelonLogger.Msg($"[LargerCart] {count} tray slots at table height ({_plateTopY:0.00}m) added.");
         }
         catch (Exception ex)
         {
-            MelonLogger.Warning($"[LargerCart] Tray-Slots fehlgeschlagen: {ex.GetBaseException().Message}");
+            MelonLogger.Warning($"[LargerCart] Tray slots failed: {ex.GetBaseException().Message}");
         }
     }
 
@@ -94,11 +94,11 @@ internal static class CartTable
         {
             if (_table == null) return;
             _table.SetActive(!_table.activeSelf);
-            MelonLogger.Msg($"[LargerCart] Tisch {(_table.activeSelf ? "ausgeklappt." : "eingeklappt.")}");
+            MelonLogger.Msg($"[LargerCart] Table {(_table.activeSelf ? "open." : "closed.")}");
         }
         catch (Exception ex)
         {
-            MelonLogger.Warning($"[LargerCart] Tisch-Toggle fehlgeschlagen: {ex.GetBaseException().Message}");
+            MelonLogger.Warning($"[LargerCart] Table toggle failed: {ex.GetBaseException().Message}");
         }
     }
 
@@ -111,12 +111,12 @@ internal static class CartTable
             if (_table != null) return;
 
             GameObject trolley = FindTrolley(bay);
-            if (trolley == null) return; // spaeter erneut versuchen (OnUpdate)
+            if (trolley == null) return; // retry later (OnUpdate)
 
             Bounds bounds = Measure(trolley);
             if (bounds.size.magnitude <= 0.01f)
             {
-                MelonLogger.Warning("[LargerCart] Trolley-Bounds leer — Tisch uebersprungen.");
+                MelonLogger.Warning("[LargerCart] Trolley bounds empty — table skipped.");
                 return;
             }
 
@@ -146,17 +146,17 @@ internal static class CartTable
                     new Vector3(legT, legH, legT));
             }
 
-            // Kein DontDestroyOnLoad: stirbt mit dem Trolley beim Szenenwechsel,
-            // DropIfDead() + TryEnsure bauen ihn neu.
+            // No DontDestroyOnLoad: dies with trolley on scene change,
+            // DropIfDead() + TryEnsure rebuild it.
             _plateTopY = plateY + plateH * 0.5f;
             _plateCx = bounds.center.x; _plateCz = bounds.center.z;
             _plateW = plateW; _plateD = plateD;
             _slotsAdded = false;
-            MelonLogger.Msg($"[LargerCart] Tisch gebaut ({plateW:0.00}x{plateD:0.00}m, {_table.transform.childCount} Teile). Taste zum Ausklappen.");
+            MelonLogger.Msg($"[LargerCart] Table built ({plateW:0.00}x{plateD:0.00}m, {_table.transform.childCount} parts). Key to open.");
         }
         catch (Exception ex)
         {
-            MelonLogger.Warning($"[LargerCart] Tisch-Bau fehlgeschlagen: {ex.GetBaseException().Message}");
+            MelonLogger.Warning($"[LargerCart] Table build failed: {ex.GetBaseException().Message}");
         }
     }
 

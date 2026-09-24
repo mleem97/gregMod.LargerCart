@@ -6,8 +6,8 @@ using UnityEngine;
 namespace greg.Mods.LargerCart.Interop;
 
 /// <summary>
-/// Erweitert die internen Trolley-Arrays auf die konfigurierte Kapazitaet.
-/// Direkt typisiert gegen die Il2Cpp-Dummy-DLL (kein TypeByName).
+/// Extends internal trolley arrays to configured capacity.
+/// Typed directly against Il2Cpp dummy DLL (no TypeByName).
 /// </summary>
 internal static class TrolleyArray
 {
@@ -23,21 +23,21 @@ internal static class TrolleyArray
 
             if (positions == null || used == null)
             {
-                MelonLogger.Warning("[LargerCart] positionsOnTrolley/usedPositions ist null, ueberspringe.");
+                MelonLogger.Warning("[LargerCart] positionsOnTrolley/usedPositions is null, skipping.");
                 return;
             }
 
             if (positions.Count >= targetCount && used.Count >= targetCount)
                 return;
 
-            MelonLogger.Msg($"[LargerCart] Erweitere Trolley: {positions.Count}/{used.Count} -> {targetCount}");
+            MelonLogger.Msg($"[LargerCart] Extending trolley: {positions.Count}/{used.Count} -> {targetCount}");
 
             trolley.positionsOnTrolley = ExpandPositions(positions, targetCount);
             trolley.usedPositions = ExpandUsed(used, targetCount);
         }
         catch (Exception ex)
         {
-            MelonLogger.Warning($"[LargerCart] Erweiterung fehlgeschlagen: {ex.GetBaseException().Message}");
+            MelonLogger.Warning($"[LargerCart] Extension failed: {ex.GetBaseException().Message}");
         }
     }
 
@@ -50,8 +50,8 @@ internal static class TrolleyArray
         for (int i = 0; i < copyLen; i++)
             fresh[i] = oldArray[i];
 
-        // Verhalten wie bisher: neue Slots teilen sich die letzte Position,
-        // bis das Spiel sie belegt.
+        // Same as before: new slots share the last position,
+        // until game fills them.
         Transform last = copyLen > 0 ? oldArray[copyLen - 1] : null;
         for (int i = copyLen; i < targetLen; i++)
             fresh[i] = last;
