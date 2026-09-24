@@ -7,22 +7,23 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 
 - **Cart stabilization** (`StabilizeCart`, default on): Rigidbody mass ×5 and
-  angularDrag ×10 against flying/tumbling under load. Multipliers
+  angular drag ×10 against flying away/tumbling under load. Multipliers
   (`CartMassMultiplier` 1–50, `CartAngularDragMultiplier` 1–100) in
-  `Mods/gregMod.LargerCart/config.json`, once per scene, all logged.
+  `Mods/gregMod.LargerCart/config.json`, once per scene, everything logged.
 - **Folding table** (`TableEnabled`, key `TableToggleKey`, default `T`):
-  shelf plate + legs as trolley children (geometry from trolley bounds, material
-  from trolley, no collider). Dies with scene change, rebuilt fresh.
-- **Tray slots** (`TableTraySlots`, 4×3 grid at plate height): hooked into
-  `positionsOnTrolley`/`usedPositions`, slots hang off the trolley
-  (visible even with folded plate).
+  shelf + legs as trolley child (geometry from trolley bounds, material
+  from the trolley, no collider). Destroyed on scene change, rebuilt.
+- **Tray slots** (`TableTraySlots`, 4×3 grid at shelf height): hooked into
+  `positionsOnTrolley`/`usedPositions`, slots attached to the trolley
+  (visible even when the shelf is folded).
 
 ## [2.1.0] — 2026-09-24
 
 ### Added
 
-- Trolley stabilization (mass/inertia, gently tuned: mass x2, angularDrag x4);
-  config wiring (config → statics + patch hook).
+<<<<<<< Updated upstream
+- Trolley stabilization (mass/inertia, tuned more gently: mass x2,
+  angular drag x4); config wiring (config → statics + patch hook).
 
 ## [2.0.0]
 
