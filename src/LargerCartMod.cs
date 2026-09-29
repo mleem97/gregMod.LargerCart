@@ -4,6 +4,7 @@ using MelonLoader;
 using UnityEngine.InputSystem;
 using greg.Mods.LargerCart.Config;
 using greg.Mods.LargerCart.Patches;
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("ModCoverage.Tests")]
 
 [assembly: MelonInfo(typeof(greg.Mods.LargerCart.LargerCartMod), "gregMod.LargerCart", "2.1.1", "teamGregModding / mleem97 & BigTexasJerky")]
 [assembly: MelonGame("Waseku", "Data Center")]
@@ -35,6 +36,12 @@ public class LargerCartMod : MelonMod
                         $"StabilizeCart = {config.StabilizeCart} " +
                         $"(mass x{config.CartMassMultiplier:0.#}, angularDrag x{config.CartAngularDragMultiplier:0.#}), " +
                         $"Table = {config.TableEnabled} (key {_tableKey}).");
+        if (config.TargetPositionCount > LargerCartConfig.MinPositionCount)
+        {
+            MelonLogger.Warning("[LargerCart] Slots beyond vanilla capacity only survive save/load " +
+                                "with this mod active and the SAME TargetPositionCount. " +
+                                "Overloaded trolleys couple the save to this config.");
+        }
 
         try
         {

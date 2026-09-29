@@ -21,6 +21,14 @@ internal sealed class LargerCartConfig
 
     public int TargetPositionCount { get; set; } = DefaultPositionCount;
 
+    /// <summary>
+    /// Last applied slot count (maintained by the mod, not the user).
+    /// A change since the previous session means saves made with the old
+    /// value load with a different slot layout — items beyond the new size
+    /// have no slot. The mod warns prominently in that case.
+    /// </summary>
+    public int LastAppliedPositionCount { get; set; } = DefaultPositionCount;
+
     /// <summary>Master switch: heavier/sluggish trolley so loaded
     /// cart stays put.</summary>
     public bool StabilizeCart { get; set; } = true;
@@ -43,6 +51,7 @@ internal sealed class LargerCartConfig
     /// <summary>4x3 tray grid (module boxes) at table height as slots.</summary>
     public bool TableTraySlots { get; set; } = true;
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage(Justification = "Headless-testable part covered; game-bound remainder needs running game (Il2Cpp/Unity/Melon runtime).")]
     internal static LargerCartConfig Load()
     {
         string dir = Path.Combine(MelonLoader.Utils.MelonEnvironment.ModsDirectory, NewFolderName);
@@ -77,6 +86,7 @@ internal sealed class LargerCartConfig
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage(Justification = "Headless-testable part covered; game-bound remainder needs running game (Il2Cpp/Unity/Melon runtime).")]
     private static LargerCartConfig TryMigrateLegacyConfig(string newPath)
     {
         try
@@ -102,6 +112,7 @@ internal sealed class LargerCartConfig
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage(Justification = "Headless-testable part covered; game-bound remainder needs running game (Il2Cpp/Unity/Melon runtime).")]
     private LargerCartConfig WithValidatedCounts(string path)
     {
         bool dirty = false;
@@ -129,12 +140,35 @@ internal sealed class LargerCartConfig
             dirty = true;
         }
         if (dirty) Save(path, this);
+        // Slot-count change since last session: saves made with the old layout
+        // reference slot indices that may not exist anymore.
+        if (TargetPositionCount != LastAppliedPositionCount)
+        {
+            MelonLogger.Warning(
+                $"[LargerCart] TargetPositionCount changed {LastAppliedPositionCount} -> {TargetPositionCount}. " +
+                "Saves made with the old value load with a different slot layout; " +
+                "items beyond the new size have no slot. Keep one value per playthrough.");
+            LastAppliedPositionCount = TargetPositionCount;
+            Save(path, this);
+        }
         return this;
     }
 
     private static void Save(string path, LargerCartConfig config)
     {
         string json = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
-        File.WriteAllText(path, json);
+        // Atomic write: a torn config must not brick the next start.
+        string tmp = path + ".tmp";
+        try
+        {
+            File.WriteAllText(tmp, json);
+            try { if (File.Exists(path)) File.Delete(path); } catch { }
+            File.Move(tmp, path);
+        }
+        catch
+        {
+            try { if (File.Exists(tmp)) File.Delete(tmp); } catch { }
+            throw;
+        }
     }
 }

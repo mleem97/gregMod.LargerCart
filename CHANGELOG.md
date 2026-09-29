@@ -10,6 +10,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Slot-count change since the previous session is now detected
+  (`LastAppliedPositionCount`) with a prominent warning: saves made with the
+  old layout reference slot indices that may not exist anymore. Overloads
+  beyond vanilla capacity log that they only survive save/load with this mod
+  active and the same `TargetPositionCount`. Config writes are atomic.
+
 ### Added
 
 - **Cart stabilization** (`StabilizeCart`, default on): Rigidbody mass ×5 and
